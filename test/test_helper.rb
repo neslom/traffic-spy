@@ -8,3 +8,6 @@ require 'minitest/autorun'
 require 'capybara'
 
 Capybara.app = TrafficSpy::Server
+
+require 'database_cleaner'
+DatabaseCleaner.strategy = :truncation
