@@ -20,7 +20,6 @@ module TrafficSpy
     def test_invalid_if_missing_identifier
       user = User.new(rootUrl: "hweoaw;eofiawofhawef")
       refute user.valid?
-
     end
 
     def test_invalid_if_missing_root_url
