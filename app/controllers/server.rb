@@ -1,5 +1,5 @@
 require 'json'
-# require '../models/url'
+
 module TrafficSpy
   class Server < Sinatra::Base
     get '/' do
@@ -34,6 +34,7 @@ module TrafficSpy
       body "User not registered"
     else
       payload = JSON.parse(params[:payload]).symbolize_keys
+      binding.pry
       url= Url.find_or_create_by({url: payload[:url]})
       referral = Referral.find_or_create_by({referredBy: payload[:referredBy]})
       request = Request.find_or_create_by({requestType: payload[:requestType]})

@@ -6,6 +6,19 @@ module TrafficSpy
       DatabaseCleaner.clean
     end
 
+#def setup
+    #As a client
+
+    #When I visit http://yourapplication:port/sources/IDENTIFIER
+#end
+#    Then I should see a page that displays the most requested URLS to least requested URLS (url)
+#    And I should see  a web browser breakdown across all requests (userAgent)
+#    And I should see  a OS breakdown across all requests (userAgent)
+#    And I should see  a Screen Resolution across all requests (resolutionWidth x resolutionHeight)
+#    And I should see  a Longest, average response time per URL to shortest, average response time per URL
+#    And I should see  a Hyperlinks of each url to view url specific data
+#    And I should see  a Hyperlink to view aggregate event data
+#
     def setup
       @event = Event.create(eventName: "socialLogin")
       @referral = Referral.create(referredBy: "http://www.jumpstartlabs.com")
@@ -35,7 +48,7 @@ module TrafficSpy
     def test_creates_multiple_payload
       Payload.find_or_create_by(user_id: 1, url_id: 2, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: 1, request_id: 3, parameters: "fill", event_id: 1, user_agent_id: 1, resolution_id: 2, ip: "63.29.38.211")
       Payload.find_or_create_by(user_id: 2, url_id: 2, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 40, referral_id: 1, request_id: 4, parameters: "fill", event_id: 1, user_agent_id: 1, resolution_id: 2, ip: "63.29.38.211")
-      assert_equal 2, Payload.count   
+      assert_equal 2, Payload.count
     end
 
     # Integration tests with payloads
@@ -85,7 +98,7 @@ module TrafficSpy
       Payload.create(user_id: 2, url_id: 2, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 40, referral_id: 1, request_id: 4, parameters: "fill", event_id: 2, user_agent_id: 1, resolution_id: 2, ip: "63.29.38.211")
       Event.create(eventName: "antisocialLogin")
       payload = Payload.find_by(event_id: 2)
-      assert_equal "antisocialLogin", payload.event.eventName    
+      assert_equal "antisocialLogin", payload.event.eventName
     end
 
   end
