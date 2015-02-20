@@ -26,31 +26,30 @@ module TrafficSpy
     end
 
     post '/sources/:identifier/data' do
-     if params[:payload].nil? || params[:payload].empty?
-       status 400
-       body "Missing payload"
-     elsif !User.find_by(identifier: params[:identifier])
-      status 403
-      body "User not registered"
-    else
-      payload = JSON.parse(params[:payload]).symbolize_keys
-      url= Url.find_or_create_by({url: payload[:url]})
-      referral = Referral.find_or_create_by({referredBy: payload[:referredBy]})
-      request = Request.find_or_create_by({requestType: payload[:requestType]})
-      event = Event.find_or_create_by({eventName: payload[:eventName]})
-      useragent = UserAgent.find_or_create_by({userAgent: payload[:userAgent]})
-      resolution = Resolution.find_or_create_by({resolutionWidth: payload[:resolutionWidth], resolutionHeight: payload[:resolutionHeight]})
-      user = User.find_by(identifier: params[:identifier])
-      payload[:parameters] = payload[:parameters].to_s
-      # Payload.find_or_create_by({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: useragent.id, resolution_id: resolution.id, ip: payload[:ip]})
-        if Payload.find_by({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: useragent.id, resolution_id: resolution.id, ip: payload[:ip]})
+      if params[:payload].nil? || params[:payload].empty?
+        status 400
+        body "Missing payload"
+      elsif !User.find_by(identifier: params[:identifier])
+        status 403
+        body "User not registered"
+      else
+        payload = JSON.parse(params[:payload]).symbolize_keys
+        x = Serialize.new(payload)
+        url = x.create_url
+        referral = x.create_referral
+        request = x.create_request
+        event = x.create_event
+        user_agent = x.create_user_agent
+        resolution = x.create_resolution
+        user = User.find_by(identifier: params[:identifier])
+        payload[:parameters] = payload[:parameters].to_s
+        if Payload.find_by({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: user_agent.id, resolution_id: resolution.id, ip: payload[:ip]})
           status 403
           body "FORBIDDEN: Payload has already been recieved"
         else
-          Payload.create({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: "", event_id: event.id, user_agent_id: useragent.id, resolution_id: resolution.id, ip: payload[:ip]})
+          Payload.create({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: user_agent.id, resolution_id: resolution.id, ip: payload[:ip]})
         end
       end
-
     end
   end
 end

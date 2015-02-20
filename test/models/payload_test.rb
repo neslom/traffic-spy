@@ -7,6 +7,19 @@ module TrafficSpy
       DatabaseCleaner.clean
     end
 
+#def setup
+    #As a client
+
+    #When I visit http://yourapplication:port/sources/IDENTIFIER
+#end
+#    Then I should see a page that displays the most requested URLS to least requested URLS (url)
+#    And I should see  a web browser breakdown across all requests (userAgent)
+#    And I should see  a OS breakdown across all requests (userAgent)
+#    And I should see  a Screen Resolution across all requests (resolutionWidth x resolutionHeight)
+#    And I should see  a Longest, average response time per URL to shortest, average response time per URL
+#    And I should see  a Hyperlinks of each url to view url specific data
+#    And I should see  a Hyperlink to view aggregate event data
+#
     def setup
       @event = Event.create(eventName: "socialLogin")
       @referral = Referral.create(referredBy: "http://www.jumpstartlabs.com")
