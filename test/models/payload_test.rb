@@ -41,22 +41,22 @@ module TrafficSpy
     # Integration tests with payloads
 
     def test_it_can_find_an_event_name_by_payload
-      payload = @event.payloads.create(user_id: @user, url_id: @url, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, request_id: @request, parameters: "fill", event_id: @event,user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
+      payload = @event.payloads.create(user_id: @user, url_id: @url, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, request_id: @request, parameters: "fill",user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
       assert_equal "socialLogin", payload.event.eventName
     end
 
     def test_it_can_find_an_user_name_by_payload
-      payload = @user.payloads.create(user_id: @user, url_id: @url, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, request_id: @request, parameters: "fill", event_id: @event, user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
+      payload = @user.payloads.create(url_id: @url, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, request_id: @request, parameters: "fill", event_id: @event, user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
       assert_equal "jumpstartlab", payload.user.identifier
     end
 
     def test_it_can_find_an_url_name_by_payload
-      payload = @url.payloads.create(user_id: @user, url_id: @url, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, request_id: @request, parameters: "fill", event_id: @event, user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
+      payload = @url.payloads.create(user_id: @user, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, request_id: @request, parameters: "fill", event_id: @event, user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
       assert_equal "http://www.jumpstartlabs.com", payload.url.url
     end
 
     def test_it_can_find_an_request_name_by_payload
-      payload = @request.payloads.create(user_id: @user, url_id: @url, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, request_id: @request, parameters: "fill", event_id: @event, user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
+      payload = @request.payloads.create(user_id: @user, url_id: @url, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, parameters: "fill", event_id: @event, user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
       assert_equal "GET", payload.request.requestType
       assert_equal 1, payload.request.id
     end
@@ -67,7 +67,26 @@ module TrafficSpy
       assert_equal 1, payload.user_agent.id
     end
 
+    def test_it_can_find_an_resolution_agent_name_by_payload
+      payload = @resolution.payloads.create(user_id: @user, url_id: @url, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, request_id: @request, parameters: "fill", event_id: @event, user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
+      assert_equal "1280", payload.resolution.resolutionHeight
+      assert_equal "1920", payload.resolution.resolutionWidth
+      assert_equal 1, payload.resolution.id
+    end
 
+    def test_it_can_find_a_referral_name_by_payload
+      payload = @referral.payloads.create(user_id: @user, url_id: @url, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, request_id: @request, parameters: "fill", event_id: @event, user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
+      assert_equal "http://www.jumpstartlabs.com", payload.referral.referredBy
+      assert_equal 1, payload.referral.id
+    end
+
+    def test_it_can_find_an_event_name_by_payload_when_there_are_multiple_events
+      Payload.create(user_id: 1, url_id: 2, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: 1, request_id: 3, parameters: "fill", event_id: 1, user_agent_id: 1, resolution_id: 2, ip: "63.29.38.211")
+      Payload.create(user_id: 2, url_id: 2, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 40, referral_id: 1, request_id: 4, parameters: "fill", event_id: 2, user_agent_id: 1, resolution_id: 2, ip: "63.29.38.211")
+      Event.create(eventName: "antisocialLogin")
+      payload = Payload.find_by(event_id: 2)
+      assert_equal "antisocialLogin", payload.event.eventName    
+    end
 
   end
 end
