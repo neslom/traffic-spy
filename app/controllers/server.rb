@@ -1,3 +1,5 @@
+require 'json'
+# require '../models/url'
 module TrafficSpy
   class Server < Sinatra::Base
     get '/' do
@@ -30,9 +32,21 @@ module TrafficSpy
      elsif !User.find_by(identifier: params[:identifier])
       status 403
       body "User not registered"
-     end
-     #p params[:payload]
-     #p params[:identifier]
+    else
+      payload = JSON.parse(params[:payload]).symbolize_keys
+      url= Url.find_or_create_by({url: payload[:url]})
+      referral = Referral.find_or_create_by({referredBy: payload[:referredBy]})
+      request = Request.find_or_create_by({requestType: payload[:requestType]})
+      event = Event.find_or_create_by({eventName: payload[:eventName]})
+      useragent = UserAgent.find_or_create_by({userAgent: payload[:userAgent]})
+      resolution = Resolution.find_or_create_by({resolutionWidth: payload[:resolutionWidth], resolutionHeight: payload[:resolutionHeight]})
+      user = User.find_by(identifier: params[:identifier])
+
+      Payload.find_or_create_by({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: useragent.id, resolution_id: resolution.id, ip: payload[:ip]})
+
+
+      end
+
     end
   end
 end
