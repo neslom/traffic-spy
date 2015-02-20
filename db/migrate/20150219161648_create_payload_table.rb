@@ -7,7 +7,7 @@ class CreatePayloadTable < ActiveRecord::Migration
       t.integer :respondedIn
       t.integer :referral_id
       t.integer :request_id
-      t.text :paramaters
+      t.text :parameters
       t.integer :event_id
       t.integer :user_agent_id
       t.integer :resolution_id
