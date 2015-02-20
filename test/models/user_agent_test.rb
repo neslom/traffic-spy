@@ -22,5 +22,6 @@ module TrafficSpy
       UserAgent.find_or_create_by(userAgent: "Mozilla/5.0 (Macintosh%3B Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Dhrome/24.0.1309.0 Safari/537.17")
       assert_equal 2, UserAgent.count
     end
+
   end
 end

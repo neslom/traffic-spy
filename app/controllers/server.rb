@@ -1,5 +1,5 @@
 require 'json'
-# require '../models/url'
+
 module TrafficSpy
   class Server < Sinatra::Base
     get '/' do

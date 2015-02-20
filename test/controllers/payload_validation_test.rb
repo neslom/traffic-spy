@@ -29,4 +29,9 @@ class PayloadValidationTest < MiniTest::Test
     assert_equal 403, last_response.status
     assert_equal "User not registered", last_response.body
   end
+
+  def test_a_duplicate_will_raise_an_error
+    
+  end
+
 end
