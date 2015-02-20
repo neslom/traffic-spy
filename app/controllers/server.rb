@@ -45,7 +45,7 @@ module TrafficSpy
         payload[:parameters] = payload[:parameters].to_s
         if Payload.find_by({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: user_agent.id, resolution_id: resolution.id, ip: payload[:ip]})
           status 403
-          body "FORBIDDEN: Payload has already been recieved"
+          body "FORBIDDEN: Payload has already been received"
         else
           Payload.create({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: user_agent.id, resolution_id: resolution.id, ip: payload[:ip]})
         end
