@@ -51,5 +51,13 @@ module TrafficSpy
         end
       end
     end
+
+    get '/sources/:identifier' do
+      if !User.find_by(identifier: params[:identifier])
+        erb :error
+      else
+        erb :index
+      end
+    end
   end
 end
