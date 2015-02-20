@@ -4,7 +4,8 @@ Bundler.require
 require "sinatra/activerecord/rake"
 
 task :test do
-    Dir.glob('./test/**/*_test.rb') { |file| require file }
+  #ENV["RACK_ENV"] ||= "test"
+  Dir.glob('./test/**/*_test.rb') { |file| require file }
 end
 
 namespace :sanitation do
