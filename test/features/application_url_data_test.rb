@@ -1,4 +1,4 @@
-# require './test/test_helper'
+require './test/test_helper'
 #  include Capybara::DSL
 
 
