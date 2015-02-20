@@ -41,10 +41,14 @@ module TrafficSpy
       useragent = UserAgent.find_or_create_by({userAgent: payload[:userAgent]})
       resolution = Resolution.find_or_create_by({resolutionWidth: payload[:resolutionWidth], resolutionHeight: payload[:resolutionHeight]})
       user = User.find_by(identifier: params[:identifier])
-
-      Payload.find_or_create_by({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: useragent.id, resolution_id: resolution.id, ip: payload[:ip]})
-
-
+      payload[:parameters] = payload[:parameters].to_s
+      # Payload.find_or_create_by({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: useragent.id, resolution_id: resolution.id, ip: payload[:ip]})
+        if Payload.find_by({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: useragent.id, resolution_id: resolution.id, ip: payload[:ip]})
+          status 403
+          body "FORBIDDEN: Payload has already been recieved"
+        else
+          Payload.create({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: "", event_id: event.id, user_agent_id: useragent.id, resolution_id: resolution.id, ip: payload[:ip]})
+        end
       end
 
     end
