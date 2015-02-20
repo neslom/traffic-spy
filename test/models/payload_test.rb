@@ -2,6 +2,7 @@ require './test/test_helper'
 
 module TrafficSpy
   class PayloadTest < MiniTest::Test
+    
     def teardown
       DatabaseCleaner.clean
     end
@@ -15,27 +16,29 @@ module TrafficSpy
       @user_agent = UserAgent.create(userAgent: "Mozilla/5.0 (Macintosh%3B Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1309.0 Safari/537.17")
       @user = User.create(identifier: "jumpstartlab", rootUrl: "hweoaw;eofiawofhawef")
     end
+
     # Unit Testing for Paylod
     def test_it_can_create_payload_entry
-      payload = Payload.new(user_id: 1, url_id: 2, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: 1, request_id: 3, parameters: "fill", event_id: 1, user_agent_id: 1, resolution_id: 2, ip: "63.29.38.211")
+      payload = Payload.new(user_id: @user, url_id: @url, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, request_id: @request, parameters: "fill",user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
       assert payload.valid?
     end
 
     def test_it_adds_to_db
-      Payload.create(user_id: 1, url_id: 2, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: 1, request_id: 3, parameters: "fill", event_id: 1, user_agent_id: 1, resolution_id: 2, ip: "63.29.38.211")
+      Payload.create(user_id: @user, url_id: @url, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, request_id: @request, parameters: "fill",user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
       assert_equal 1, Payload.count
     end
 
     def test_it_will_not_create_a_duplicate
-      Payload.find_or_create_by(user_id: 1, url_id: 2, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: 1, request_id: 3, parameters: "fill", event_id: 1, user_agent_id: 1, resolution_id: 2, ip: "63.29.38.211")
-      Payload.find_or_create_by(user_id: 1, url_id: 2, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: 1, request_id: 3, parameters: "fill", event_id: 1, user_agent_id: 1, resolution_id: 2, ip: "63.29.38.211")
+      2.times do
+      Payload.find_or_create_by(user_id: 1, url_id: 1, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: 1, request_id: 1, parameters: "fill",user_agent_id: 1, resolution_id: 1, ip: "63.29.38.211")
+        end
       assert_equal 1, Payload.count
     end
 
     def test_creates_multiple_payload
-      Payload.find_or_create_by(user_id: 1, url_id: 2, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: 1, request_id: 3, parameters: "fill", event_id: 1, user_agent_id: 1, resolution_id: 2, ip: "63.29.38.211")
+      Payload.find_or_create_by(user_id: @user, url_id: @url, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, request_id: @request, parameters: "fill",user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
       Payload.find_or_create_by(user_id: 2, url_id: 2, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 40, referral_id: 1, request_id: 4, parameters: "fill", event_id: 1, user_agent_id: 1, resolution_id: 2, ip: "63.29.38.211")
-      assert_equal 2, Payload.count   
+      assert_equal 2, Payload.count
     end
 
     # Integration tests with payloads
@@ -81,12 +84,11 @@ module TrafficSpy
     end
 
     def test_it_can_find_an_event_name_by_payload_when_there_are_multiple_events
-      Payload.create(user_id: 1, url_id: 2, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: 1, request_id: 3, parameters: "fill", event_id: 1, user_agent_id: 1, resolution_id: 2, ip: "63.29.38.211")
+      Payload.create(user_id: @user, url_id: @url, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 37, referral_id: @referral, request_id: @request, parameters: "fill",user_agent_id: @user_agent, resolution_id: @resolution, ip: "63.29.38.211")
       Payload.create(user_id: 2, url_id: 2, requestedAt: "2013-02-16 21:38:28 -0700", respondedIn: 40, referral_id: 1, request_id: 4, parameters: "fill", event_id: 2, user_agent_id: 1, resolution_id: 2, ip: "63.29.38.211")
       Event.create(eventName: "antisocialLogin")
       payload = Payload.find_by(event_id: 2)
-      assert_equal "antisocialLogin", payload.event.eventName    
+      assert_equal "antisocialLogin", payload.event.eventName
     end
-
   end
 end

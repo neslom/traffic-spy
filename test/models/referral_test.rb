@@ -22,5 +22,6 @@ module TrafficSpy
       Referral.find_or_create_by(referredBy: "http://www.google.com")
       assert_equal 2, Referral.count
     end
+
   end
 end

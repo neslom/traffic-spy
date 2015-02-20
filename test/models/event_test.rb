@@ -22,5 +22,6 @@ module TrafficSpy
       Event.find_or_create_by(eventName: "addedSocialThroughPromptB")
       assert_equal 2, Event.count
     end
+
   end
 end
