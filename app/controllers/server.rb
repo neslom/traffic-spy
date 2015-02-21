@@ -53,9 +53,14 @@ module TrafficSpy
     end
 
     get '/sources/:identifier' do
-      if !User.find_by(identifier: params[:identifier])
+      user = User.find_by(identifier: params[:identifier])
+
+      #if !User.find_by(identifier: params[:identifier])
+      if !user
         erb :error
       else
+        #user = User.find_by(identifier: params[:identifier])
+        @urls = user.payloads.map { |x| x.url.url }
         erb :index
       end
     end
