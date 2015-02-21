@@ -1,0 +1,6 @@
+<h3>URL Response Times:</h3>
+<ol>
+<% @url_response_times.each do |response_time| %>
+  <li><%= "#{response_time[0]}: #{response_time[1]}" %> ms</li>
+<% end %>
+</ol>

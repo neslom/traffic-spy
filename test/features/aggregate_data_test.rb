@@ -30,14 +30,34 @@ module TrafficSpy
 
     def test_client_can_view_urls
       visit '/sources/jumpstartlab'
-      assert page.has_content?("http://jumpstartlab.com/blog")
+      within("#url_list") do
+        assert page.has_content?("http://jumpstartlab.com/blog")
+      end
     end
 
     def test_shows_browser_info
       post '/sources/jumpstartlab/data', 'payload={"url":"http://jumpstartlab.com/blog","requestedAt":"2013-02-16 21:38:28 -0700","respondedIn":37,"referredBy":"http://jumpstartlab.com","requestType":"GET","parameters":[],"eventName": "socialLogin","userAgent":"Mozilla/5.0 (Macintosh%3B Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Safari/24.0.1309.0 Safari/537.17","resolutionWidth":"1920","resolutionHeight":"1280","ip":"63.29.38.211"}'
       visit '/sources/jumpstartlab'
-      assert page.has_content?("Chrome")
-      assert page.has_content?("Safari")
+      within("#user_agent_list") do
+        assert page.has_content?("Chrome")
+        assert page.has_content?("Safari")
+      end
+    end
+
+    def test_shows_screen_resolution
+      post '/sources/jumpstartlab/data', 'payload={"url":"http://jumpstartlab.com/blog","requestedAt":"2013-02-16 21:38:28 -0700","respondedIn":37,"referredBy":"http://jumpstartlab.com","requestType":"GET","parameters":[],"eventName": "socialLogin","userAgent":"Mozilla/5.0 (Macintosh%3B Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Safari/24.0.1309.0 Safari/537.17","resolutionWidth":"2000","resolutionHeight":"2000","ip":"63.29.38.211"}'
+      visit '/sources/jumpstartlab'
+      within("#resolution_list") do
+        assert page.has_content?("2000 X 2000")
+        assert page.has_content?("1920 X 1280")
+      end
+    end
+
+    def test_shows_average_response_time_per_url
+      visit '/sources/jumpstartlab'
+      within("#url_response_time_list") do
+        assert page.has_content?(37)
+      end
     end
 
     # Application Details
