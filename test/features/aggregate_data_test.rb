@@ -33,6 +33,10 @@ module TrafficSpy
       assert page.has_content?("http://jumpstartlab.com/blog")
     end
 
+    def test_shows_browser_breakdown
+     skip
+    end
+
     # Application Details
     #
     # A client is able to view aggregate site data at the following address:
