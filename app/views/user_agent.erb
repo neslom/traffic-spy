@@ -1,6 +1,14 @@
-<h3>User Browser Breakdown:</h3>
+<h3>User Agent Breakdown:</h3>
 <ol>
+  <lh><strong>Browsers:</strong></lh>
 <% @sorted_user_agents.each do |user_agent| %>
   <li><%= user_agent %></li>
+<% end %>
+</ol>
+
+<ol>
+  <lh><strong>Operating Systems:</strong></lh>
+<% @sorted_user_agents.each do |user_agent| %>
+  <li><%= user_agent.os %></li>
 <% end %>
 </ol>

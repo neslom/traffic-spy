@@ -5,6 +5,7 @@ gem 'pg'
 gem 'activerecord'
 gem 'sinatra-activerecord'
 gem 'pry'
+gem 'user_agent_parser'
 
 group :development, :test do
   gem 'shotgun'
