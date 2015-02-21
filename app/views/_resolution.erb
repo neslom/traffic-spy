@@ -1,0 +1,6 @@
+<h3>User Resolution Breakdown:</h3>
+<ol>
+<% @resolutions.each do |resolution| %>
+  <li><%= "#{resolution.resolutionWidth} X #{resolution.resolutionHeight}" %></li>
+<% end %>
+</ol>
