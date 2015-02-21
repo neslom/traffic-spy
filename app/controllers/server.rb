@@ -59,6 +59,8 @@ module TrafficSpy
       else
         urls = user.payloads.map { |x| x.url.url }
         @sorted_urls = urls.sort_by { |e| urls.count(e) }.reverse.uniq
+        user_agents = user.payloads.map { |x| x.user_agent.userAgent }
+        @sorted_user_agents = user_agents.sort_by { |e| user_agents.count(e) }.reverse.uniq
         erb :index
       end
     end
