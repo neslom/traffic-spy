@@ -56,10 +56,9 @@ module TrafficSpy
     def test_shows_average_response_time_per_url
       visit '/sources/jumpstartlab'
       within("#url_response_time_list") do
-        assert page.has_content?(37)
+        assert page.has_content?("http://jumpstartlab.com/blog: 37 ms")
       end
     end
-
     # Application Details
     #
     # A client is able to view aggregate site data at the following address:
