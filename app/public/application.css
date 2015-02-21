@@ -1,14 +1,12 @@
-body{ background-color: gray;}
+body{ 
+  background-image: url("images/img_james_bond.jpg");
+  background-size: 100%;
+  color: red;
+
+}
 
 #foot{
   color: white;
   position: absolute;
   bottom: 5px;
-}
-
-#bond {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  width: 100px;
 }
