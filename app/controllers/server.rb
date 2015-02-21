@@ -51,5 +51,19 @@ module TrafficSpy
         end
       end
     end
+
+    get '/sources/:identifier' do
+      user = User.find_by(identifier: params[:identifier])
+      if !user
+        erb :error
+      else
+        urls = user.payloads.map { |x| x.url.url }
+        @sorted_urls = urls.sort_by { |e| urls.count(e) }.reverse.uniq
+        user_agents = user.payloads.map { |x| x.user_agent.userAgent }
+        sorted_user_agents = user_agents.sort_by { |e| user_agents.count(e) }.reverse.uniq
+        @sorted_user_agents = sorted_user_agents.map { |x| UserAgentParser.parse(x) }
+        erb :index
+      end
+    end
   end
 end
