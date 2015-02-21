@@ -62,6 +62,10 @@ module TrafficSpy
         user_agents = user.payloads.map { |x| x.user_agent.userAgent }
         sorted_user_agents = user_agents.sort_by { |e| user_agents.count(e) }.reverse.uniq
         @sorted_user_agents = sorted_user_agents.map { |x| UserAgentParser.parse(x) }
+        @resolutions = user.payloads.map { |x| x.resolution }.uniq
+        @url_response_times = Url.all.map do |name|
+        [name.url, user.payloads.where(url_id: name.id).average(:respondedIn).to_i]
+        end
         erb :index
       end
     end
