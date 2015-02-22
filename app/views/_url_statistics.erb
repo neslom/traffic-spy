@@ -1,0 +1,5 @@
+<h3><%= params[:identifier] + "/" + params[:relative] + " Statistics"%></h3>
+<ul>
+  <li>Longest response time: <%= @url.maximum(:respondedIn) %></li>
+  <li>Shortest response time: <%= @url.minimum(:respondedIn) %></li>
+</ul>
