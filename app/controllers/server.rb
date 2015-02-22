@@ -81,6 +81,9 @@ module TrafficSpy
         erb :error
       else
         @url = user.payloads.where(url_id: url.id)
+        @http_verbs = @url.all.map { |x| x.request.requestType }.uniq
+        referrers = @url.all.map { |x| x.referral.referredBy }
+        @sorted_referrers = referrers.sort_by { |e| referrers.count(e) }.reverse.uniq
         erb :_url_statistics
       end
     end
