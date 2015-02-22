@@ -85,6 +85,8 @@ module TrafficSpy
         @http_verbs = @url.all.map { |x| x.request.requestType }.uniq
         referrers = @url.all.map { |x| x.referral.referredBy }
         @sorted_referrers = referrers.sort_by { |e| referrers.count(e) }.reverse.uniq
+        user_agents = user.payloads.map { |x| x.user_agent.userAgent }
+        @sorted_user_agents = user_agents.sort_by { |e| user_agents.count(e) }.reverse.uniq
         erb :_url_statistics
       end
     end
@@ -101,20 +103,20 @@ module TrafficSpy
       end
     end
 
-    get '/sources/:identifier/events/:eventname' do 
+    get '/sources/:identifier/events/:eventname' do
       user = User.find_by(identifier: params[:identifier])
       event_ob = Event.find_by(eventName: params[:eventname])
       if event_ob.nil?
-        @message = "#{params[:eventname]} is not an event associated with this user <br> 
+        @message = "#{params[:eventname]} is not an event associated with this user <br>
         <a href='/sources/#{params[:identifier]}/events'>Return To Events Index</a>"
         erb :error
       else
         @event_name = event_ob.eventName
         @event_occurances = event_ob.payloads.count {|us| user.payloads.name == params[:identifier]}
+
         @event_time = event_ob.payloads.where(user_id: user.id ).all.group_by do |hour|
           Time.parse(hour.requestedAt).strftime("%I%p")
         end
-
       erb :event_detail
     end
     end
