@@ -24,6 +24,28 @@ module TrafficSpy
       assert '/sources/jumpstartlab/events/socialLogin', current_path
       assert page.has_content?("Event Detail")
     end
+
+    def test_it_provides_a_custom_error_message_when_identifier_does_not_exist
+      visit '/sources/jumpstartlab/events/pauliscool'
+      assert '/sources/jumpstartlab/events/pauliscool', current_path
+      assert page.has_content?("pauliscool")
+      assert page.has_link?("Return To Events Index")
+      click_link_or_button("Return To Events Index")
+      assert '/sources/jumpstartlab/events', current_path
+    end
+
+    def test_it_displays_the_number_of_events_that_occured
+      visit '/sources/jumpstartlab/events/socialLogin'
+      within ('#event_occurances') do 
+        assert page.has_content?(1)
+      end
+      post '/sources/jumpstartlab/data', 'payload={"url":"http://jumpstartlab.com/blog","requestedAt":"2013-02-16 21:38:28 -0700","respondedIn":7,"referredBy":"http://jumpstartlab.com","requestType":"GET","parameters":[],"eventName": "socialLogin","userAgent":"Mozilla/5.0 (Macintosh%3B Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1309.0 Safari/537.17","resolutionWidth":"1920","resolutionHeight":"1280","ip":"63.29.38.211"}'
+      visit '/sources/jumpstartlab/events/socialLogin'
+       within ('#event_occurances') do 
+        assert page.has_content?(2)
+      end
+    end
+
   end
 end
 
