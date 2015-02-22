@@ -76,7 +76,10 @@ module TrafficSpy
     end
 
     get '/sources/:identifier/events' do
-      'hello'
+      user = User.find_by(identifier: params[:identifier])
+      events = user.payloads.map { |u_p| u_p.event.eventName }
+      @sorted_events = events.sort_by { |ev| events.count(ev) }.reverse.uniq
+      erb :event_index
     end
 
   end

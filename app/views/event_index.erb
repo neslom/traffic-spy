@@ -1,0 +1,11 @@
+<h1>Event Index</h1>
+
+<div id= "event_index">
+  <p>Received Events By Occurances:</p>
+  <ol>
+    <% @sorted_events.each do |event| %>
+      
+      <li><a href="/sources/<%=params[:identifier]%>/events/<%=event%>"><%=event%></a></li>
+      <% end %>
+  </ol>
+</div>
