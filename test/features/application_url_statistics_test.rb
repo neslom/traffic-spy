@@ -18,6 +18,7 @@ module TrafficSpy
       post '/sources/google/data', 'payload={"url":"http://google.com/blog","requestedAt":"2013-02-16 21:38:28 -0700","respondedIn":37,"referredBy":"http://google.com","requestType":"GET","parameters":[],"eventName": "socialLogin","userAgent":"Mozilla/5.0 (Macintosh%3B Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1309.0 Safari/537.17","resolutionWidth":"1920","resolutionHeight":"1280","ip":"63.29.38.211"}'
       post '/sources/google/data', 'payload={"url":"http://google.com/blog","requestedAt":"2013-02-16 21:38:28 -0700","respondedIn":87,"referredBy":"http://google.com","requestType":"GET","parameters":[],"eventName": "socialLogin","userAgent":"Mozilla/5.0 (Macintosh%3B Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1309.0 Safari/537.17","resolutionWidth":"1920","resolutionHeight":"1280","ip":"63.29.38.211"}'
       post '/sources/google/data', 'payload={"url":"http://google.com/blog","requestedAt":"2013-02-15 21:38:28 -0700","respondedIn":37,"referredBy":"http://google.com","requestType":"GET","parameters":[],"eventName": "socialLogin","userAgent":"Mozilla/5.0 (Macintosh%3B Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1309.0 Safari/537.17","resolutionWidth":"1920","resolutionHeight":"1280","ip":"63.29.38.211"}'
+      post '/sources/google/data', 'payload={"url":"http://google.com/blog/2","requestedAt":"2012-02-15 21:38:28 -0700","respondedIn":99,"referredBy":"http://google.com","requestType":"GET","parameters":[],"eventName": "socialLogin","userAgent":"Mozilla/5.0 (Macintosh%3B Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1309.0 Safari/537.17","resolutionWidth":"1920","resolutionHeight":"1280","ip":"63.29.38.211"}'
     end
 
     def test_returns_error_if_url_does_not_exist
@@ -28,7 +29,7 @@ module TrafficSpy
     def test_client_can_navigate_to_url_specific_page
       visit '/sources/google/urls/blog'
       within("h3") do
-        assert page.has_content?("google/blog Statistics")
+        assert page.has_content?("http://google.com/blog Statistics")
       end
     end
 
@@ -53,6 +54,23 @@ module TrafficSpy
       within("ul") do
         assert page.has_content?(/average|Average/)
         assert page.has_content?(37)
+      end
+    end
+
+    def test_shows_error_for_url_with_additional_path
+      visit '/sources/google/urls/blog/1'
+      assert page.has_content?("ERROR")
+    end
+
+    def test_shows_data_for_url_with_additional_path
+      visit '/sources/google/urls/blog/2'
+
+      within("h3") do
+        assert page.has_content?("http://google.com/blog/2 Statistics")
+      end
+
+      within("ul") do
+        assert page.has_content?(99)
       end
     end
 
