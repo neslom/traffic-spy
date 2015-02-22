@@ -20,7 +20,7 @@ module TrafficSpy
 
     def test_returns_error_view_for_non_registered_client
       visit '/sources/kimjongil'
-      assert page.has_content?("Error")
+      assert page.has_content?("ERROR")
     end
 
     def test_client_can_visit_app_detail_site
@@ -66,31 +66,12 @@ module TrafficSpy
       click_link_or_button("http://jumpstartlab.com/blog")
       assert_equal '/sources/jumpstartlab/urls/blog', current_path
     end
-    # Application Details
-    #
-    # A client is able to view aggregate site data at the following address:
-    #
-    # http://yourapplication:port/sources/IDENTIFIER
-    #
-    # When an identifer exists return a page that displays the following:
-    #
-    #     Most requested URLS to least requested URLS (url)
-    #     Web browser breakdown across all requests (userAgent)
-    #     OS breakdown across all requests (userAgent)
-    #     Screen Resolution across all requests (resolutionWidth x resolutionHeight)
-    #     Longest, average response time per URL to shortest, average response time per URL
-    #     Hyperlinks of each url to view url specific data
-    #     Hyperlink to view aggregate event data
-    #
-    # When an identifier does not exist return a page that displays the following:
-    #
-    #     Message that the identifier does not exist
-#http://yourapplication:port/sources/IDENTIFIER/urls/RELATIVE/PATH
 
-#Examples:
-
-  #http://yourapplication:port/sources/jumpstartlab/urls/blog
-#http://yourapplication:port/sources/jumpstartlab/urls/article/1
-#http://yourapplication:port/sources/jumpstartlab/urls/about
+    def test_shows_event_details_button
+      visit '/sources/jumpstartlab'
+      assert page.find_link("Event Details")
+      click_link_or_button("Event Details")
+      assert_equal '/sources/jumpstartlab/events', current_path
+    end
   end
 end
