@@ -8,6 +8,7 @@ module TrafficSpy
     end
 
     not_found do
+      @message = "not found"
       erb :error
     end
 
@@ -94,6 +95,22 @@ module TrafficSpy
       else
         erb :event_index
       end
+    end
+
+    get '/sources/:identifier/events/:eventname' do 
+      user = User.find_by(identifier: params[:identifier])
+      event_ob = Event.find_by(eventName: params[:eventname])
+      if event_ob.nil?
+        @message = "#{params[:eventname]} is not an event associated with this user <br> 
+        <a href='/sources/#{params[:identifier]}/events'>Return To Events Index</a>"
+        erb :error
+         
+      else
+          @event_name = event_ob.eventName
+        @event_occurances = event_ob.payloads.count {|us| user.payloads.name == params[:identifier]}
+      
+      erb :event_detail
+    end
     end
 
   end
