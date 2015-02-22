@@ -1,4 +1,5 @@
 require 'json'
+require 'uri'
 
 module TrafficSpy
   class Server < Sinatra::Base
@@ -69,5 +70,9 @@ module TrafficSpy
         erb :index
       end
     end
+
+    get '/sources/:identifier/urls/:relative/?:path?' do
+    end
+
   end
 end

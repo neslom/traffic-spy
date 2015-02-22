@@ -1,12 +1,7 @@
 <h1>Hello, Traffic Spyer</h1>
 
-<div id= "url_list">
-    <h3>URL list in order of reoccurance:</h3>
-    <ol>
-    <% @sorted_urls.each do |identifier_url| %>
-      <li><%= identifier_url %></li>
-    <% end %>
-    </ol>
+  <div id= "url_list">
+    <%= erb :_sorted_urls %>
   </div>
 
   <div id="user_agent_list">
