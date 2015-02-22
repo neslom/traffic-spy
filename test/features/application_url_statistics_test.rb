@@ -83,12 +83,14 @@ module TrafficSpy
     end
 
     def test_most_popular_referred_by
+      visit '/sources/google/urls/blog'
       within("#most_reffered_by") do
         assert page.has_content?("http://google.com")
       end
     end
 
     def test_most_popular_user_agents
+      visit '/sources/google/urls/blog'
 
     end
 

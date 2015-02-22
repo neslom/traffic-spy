@@ -26,3 +26,12 @@
     <% end %>
 </ol>
 </div>
+
+<div id="most_popular_user_agents">
+<ol>
+  <lh>Most popular user agents:</lh>
+    <% @sorted_referrers.each do |x| %>
+      <li><%= x %></li>
+    <% end %>
+</ol>
+</div>
