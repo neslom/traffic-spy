@@ -87,7 +87,12 @@ module TrafficSpy
       user = User.find_by(identifier: params[:identifier])
       events = user.payloads.map { |u_p| u_p.event.eventName }
       @sorted_events = events.sort_by { |ev| events.count(ev) }.reverse.uniq
-      erb :event_index
+      if @sorted_events.all?{|x| x.nil?}
+        @message = "No events have been defined for this user"
+        erb :error
+      else
+        erb :event_index
+      end
     end
 
   end
