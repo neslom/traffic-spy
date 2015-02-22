@@ -83,35 +83,18 @@ module TrafficSpy
     end
 
     def test_most_popular_referred_by
+      visit '/sources/google/urls/blog'
       within("#most_reffered_by") do
         assert page.has_content?("http://google.com")
       end
     end
 
     def test_most_popular_user_agents
-
+      visit '/sources/google/urls/blog'
+      within("#most_popular_user_agents") do
+        assert page.has_content?("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1309.0 Safari/537.17")
+      end
     end
 
   end
 end
-# A client is able to view URL specific data at the following address:
-#
-# http://yourapplication:port/sources/IDENTIFIER/urls/RELATIVE/PATH
-#
-# http://yourapplication:port/sources/google/urls/blog
-# http://yourapplication:port/sources/google/urls/article/1
-# http://yourapplication:port/sources/google/urls/about
-#
-#
-# When the url for the identifier does exists:
-#
-#     Longest response time
-#     Shortest response time
-#     Average response time
-#     Which HTTP verbs have been used
-#     Most popular referrrers (most popular reffered_by)
-#     Most popular user agents
-#
-# When the url for the identifier does not exist:
-#
-#     Message that the url has not been requested
