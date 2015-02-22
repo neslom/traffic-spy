@@ -32,10 +32,19 @@ module TrafficSpy
     end
 
     def test_can_return_maximum_response_time
-      within("ol") do
+      visit '/sources/google/urls/blog'
+      within("ul") do
         assert page.has_content?(87)
       end
     end
+
+    def test_can_return_minimum_response_time
+      visit '/sources/google/urls/blog'
+      within("ul") do
+        assert page.has_content?(37)
+      end
+    end
+
   end
 end
 # A client is able to view URL specific data at the following address:
