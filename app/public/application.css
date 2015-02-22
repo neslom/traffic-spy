@@ -7,6 +7,37 @@ body{
 #foot{
   margin-top:100px;
   color: white;
-  position: relative;
+  float: left;
   bottom: 5px;
+}
+
+table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    width: 25%;
+    border-collapse: collapse;
+}
+
+
+th, tfoot{
+    font-size: 1.1em;
+    text-align: left;
+    padding-top: 5px;
+    padding-bottom: 4px;
+    background-color: #7a7a7a;
+    color: #ffffff;
+}
+
+td, th {
+    font-size: 1em;
+    border: 1px solid #ffffff;
+    padding: 3px 7px 2px 7px;
+    border-collapse: collapse;
+}
+
+
+
+
+
+td{
+  text-align: center;
 }
