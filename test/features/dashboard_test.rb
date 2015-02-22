@@ -15,9 +15,7 @@ module TrafficSpy
 
     def test_the_dashboard_can_be_visited
       visit '/'
-      assert page.has_content?("Welcome to Traffic Spy")
+      assert page.has_content?("Welcome to Traffic Spy!")
     end
-
-
   end
 end
