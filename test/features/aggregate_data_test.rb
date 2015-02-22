@@ -59,6 +59,13 @@ module TrafficSpy
         assert page.has_content?("http://jumpstartlab.com/blog: 37 ms")
       end
     end
+
+    def test_hyperlinks_for_url_specific_data
+      visit '/sources/jumpstartlab'
+      assert page.find_link("http://jumpstartlab.com/blog")
+      click_link_or_button("http://jumpstartlab.com/blog")
+      assert_equal '/sources/jumpstartlab/urls/blog', current_path
+    end
     # Application Details
     #
     # A client is able to view aggregate site data at the following address:
@@ -78,6 +85,12 @@ module TrafficSpy
     # When an identifier does not exist return a page that displays the following:
     #
     #     Message that the identifier does not exist
+#http://yourapplication:port/sources/IDENTIFIER/urls/RELATIVE/PATH
 
+#Examples:
+
+  #http://yourapplication:port/sources/jumpstartlab/urls/blog
+#http://yourapplication:port/sources/jumpstartlab/urls/article/1
+#http://yourapplication:port/sources/jumpstartlab/urls/about
   end
 end
