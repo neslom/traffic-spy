@@ -1,11 +1,28 @@
 <h3><%= @full_url + " Statistics"%></h3>
 
+<div id="url_response_times">
+  <ul>
+    <lh>URL Response times:</lh>
+    <li>Longest response time: <%= @url.maximum(:respondedIn) %></li>
+    <li>Shortest response time: <%= @url.minimum(:respondedIn) %></li>
+    <li>Average response time: <%= @url.average(:respondedIn).to_i %></li>
+  </ul>
+</div>
+
+<div id="http_verbs">
 <ul>
-  <li>Longest response time: <%= @url.maximum(:respondedIn) %></li>
-  <li>Shortest response time: <%= @url.minimum(:respondedIn) %></li>
-  <li>Average response time: <%= @url.average(:respondedIn).to_i %></li>
-  <li>HTTP verbs: <% @http_verbs.each do |x| %>
-                    <%= x %>
-                  <% end %>
-  </li>
+  <lh>HTTP verbs:</lh>
+  <% @http_verbs.each do |x| %>
+    <li><%= x %></li>
+  <% end %>
 </ul>
+</div>
+
+<div id="most_reffered_by">
+<ol>
+  <lh>Most referred by:</lh>
+    <% @sorted_referrers.each do |x| %>
+      <li><%= x %></li>
+    <% end %>
+</ol>
+</div>
