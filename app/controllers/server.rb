@@ -4,8 +4,9 @@ require 'time'
 
 module TrafficSpy
   class Server < Sinatra::Base
+
     get '/' do
-      erb :index
+      erb :dashboard
     end
 
     not_found do
