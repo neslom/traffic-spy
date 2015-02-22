@@ -72,6 +72,11 @@ module TrafficSpy
     end
 
     get '/sources/:identifier/urls/:relative/?:path?' do
+
+    end
+
+    get '/sources/:identifier/events' do
+      'hello'
     end
 
   end
