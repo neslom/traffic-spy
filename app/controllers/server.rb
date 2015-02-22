@@ -11,7 +11,7 @@ module TrafficSpy
       erb :error
     end
 
-    post '/sources' do
+    post '/sources/?' do
       user = User.new(params)
       if user.save
         "{\"identifier\":\"#{params[:identifier]}\"}"
@@ -26,7 +26,7 @@ module TrafficSpy
       end
     end
 
-    post '/sources/:identifier/data' do
+    post '/sources/:identifier/data/?' do
       if params[:payload].nil? || params[:payload].empty?
         status 400
         body "Missing payload"
@@ -53,7 +53,7 @@ module TrafficSpy
       end
     end
 
-    get '/sources/:identifier' do
+    get '/sources/:identifier/?' do
       user = User.find_by(identifier: params[:identifier])
       if !user
         erb :error
@@ -73,8 +73,9 @@ module TrafficSpy
 
     get '/sources/:identifier/urls/:relative/?:path?' do
       user = User.find_by(identifier: params[:identifier])
-      full_url = user.rootUrl + "/" + params[:relative]
-      url = Url.find_by(url: full_url)
+      @full_url = user.rootUrl + "/" + params[:relative]
+      !params[:path] ? @full_url : @full_url = @full_url + "/" + params[:path].to_s
+      url = Url.find_by(url: @full_url)
       if url.nil? || !user.payloads.find_by(url_id: url.id)
         erb :error
       else
