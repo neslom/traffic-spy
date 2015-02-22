@@ -95,5 +95,13 @@ module TrafficSpy
       end
     end
 
+    get 'sources/:identifier/events/:eventname' do 
+      user = User.find_by(identifier: params[:identifier])
+      
+
+      "Event Detail Page"
+
+    end
+
   end
 end
