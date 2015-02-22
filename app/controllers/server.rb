@@ -72,7 +72,15 @@ module TrafficSpy
     end
 
     get '/sources/:identifier/urls/:relative/?:path?' do
-
+      user = User.find_by(identifier: params[:identifier])
+      full_url = user.rootUrl + "/" + params[:relative]
+      url = Url.find_by(url: full_url)
+      if url.nil? || !user.payloads.find_by(url_id: url.id)
+        erb :error
+      else
+        @url = user.payloads.where(url_id: url.id)
+        erb :_url_statistics
+      end
     end
 
     get '/sources/:identifier/events' do
