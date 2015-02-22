@@ -46,6 +46,14 @@ module TrafficSpy
       end
     end
 
+    def test_it_displays_time_of_single_event_in_hours
+      visit '/sources/jumpstartlab/events/socialLogin'
+      assert page.has_content?("09PM") 
+      within ("#event_occurances_by_time")  do 
+        assert page.has_content?(1)
+      end   
+    end
+
   end
 end
 

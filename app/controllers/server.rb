@@ -1,5 +1,6 @@
 require 'json'
 require 'uri'
+require 'time'
 
 module TrafficSpy
   class Server < Sinatra::Base
@@ -107,11 +108,13 @@ module TrafficSpy
         @message = "#{params[:eventname]} is not an event associated with this user <br> 
         <a href='/sources/#{params[:identifier]}/events'>Return To Events Index</a>"
         erb :error
-         
       else
-          @event_name = event_ob.eventName
+        @event_name = event_ob.eventName
         @event_occurances = event_ob.payloads.count {|us| user.payloads.name == params[:identifier]}
-      
+        @event_time = event_ob.payloads.where(user_id: user.id ).all.group_by do |hour|
+          Time.parse(hour.requestedAt).strftime("%I%p")
+        end
+
       erb :event_detail
     end
     end

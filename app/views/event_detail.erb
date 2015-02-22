@@ -1,3 +1,10 @@
 <h1> <%= @event_name %>  Event Details:  </h1>
 
-<h3>Number of times event has occured: <strong id="event_occurances"><%=@event_occurances%></strong> </h3>
+
+<div id = "event_occurances_by_time">
+<h1> Event Time: <% @event_time.each do |k, v|%>  </h1>
+        <p><%= "#{k} #{v.count} "%> </p>
+        <% end %>
+</div>
+<h3>Total Number of Events Recieved: <strong id="event_occurances"><%=@event_occurances%></strong> </h3>
+
