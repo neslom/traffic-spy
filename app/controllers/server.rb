@@ -80,6 +80,7 @@ module TrafficSpy
         erb :error
       else
         @url = user.payloads.where(url_id: url.id)
+        @http_verbs = @url.all.map { |x| x.request.requestType }.uniq
         erb :_url_statistics
       end
     end

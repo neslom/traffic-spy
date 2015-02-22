@@ -4,4 +4,8 @@
   <li>Longest response time: <%= @url.maximum(:respondedIn) %></li>
   <li>Shortest response time: <%= @url.minimum(:respondedIn) %></li>
   <li>Average response time: <%= @url.average(:respondedIn).to_i %></li>
+  <li>HTTP verbs: <% @http_verbs.each do |x| %>
+                    <%= x %>
+                  <% end %>
+  </li>
 </ul>
