@@ -10,7 +10,6 @@ module TrafficSpy
     end
 
     not_found do
-      @message = "not found"
       erb :error
     end
 
@@ -38,20 +37,15 @@ module TrafficSpy
         body "User not registered"
       else
         payload = JSON.parse(params[:payload]).symbolize_keys
-        x = Serialize.new(payload)
-        url = x.create_url
-        referral = x.create_referral
-        request = x.create_request
-        event = x.create_event
-        user_agent = x.create_user_agent
-        resolution = x.create_resolution
+        data = Serialize.new(payload)
+        data.call
         user = User.find_by(identifier: params[:identifier])
         payload[:parameters] = payload[:parameters].to_s
-        if Payload.find_by({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: user_agent.id, resolution_id: resolution.id, ip: payload[:ip]})
+        if data.payload_has_already_been_received?(user, payload)
           status 403
           body "FORBIDDEN: Payload has already been received"
         else
-          Payload.create({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: user_agent.id, resolution_id: resolution.id, ip: payload[:ip]})
+          data.create_payload(user, payload)
         end
       end
     end
@@ -59,6 +53,7 @@ module TrafficSpy
     get '/sources/:identifier/?' do
       user = User.find_by(identifier: params[:identifier])
       if !user
+        @message = "#{params[:identifier]} is not yet registered"
         erb :error
       else
         urls = user.payloads.map { |x| x.url.url }
@@ -80,6 +75,7 @@ module TrafficSpy
       !params[:path] ? @full_url : @full_url = @full_url + "/" + params[:path].to_s
       url = Url.find_by(url: @full_url)
       if url.nil? || !user.payloads.find_by(url_id: url.id)
+        @message = "#{@full_url} has not been requested"
         erb :error
       else
         @url = user.payloads.where(url_id: url.id)
@@ -114,7 +110,6 @@ module TrafficSpy
       else
         @event_name = event_ob.eventName
         @event_occurances = event_ob.payloads.count {|us| user.payloads.name == params[:identifier]}
-
         @event_time = event_ob.payloads.where(user_id: user.id ).all.group_by do |hour|
           Time.parse(hour.requestedAt).strftime("%I%p")
         end
