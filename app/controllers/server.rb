@@ -9,7 +9,6 @@ module TrafficSpy
     end
 
     not_found do
-      @message = "not found"
       erb :error
     end
 
@@ -37,20 +36,15 @@ module TrafficSpy
         body "User not registered"
       else
         payload = JSON.parse(params[:payload]).symbolize_keys
-        x = Serialize.new(payload)
-        url = x.create_url
-        referral = x.create_referral
-        request = x.create_request
-        event = x.create_event
-        user_agent = x.create_user_agent
-        resolution = x.create_resolution
+        data = Serialize.new(payload)
+        data.call
         user = User.find_by(identifier: params[:identifier])
         payload[:parameters] = payload[:parameters].to_s
-        if Payload.find_by({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: user_agent.id, resolution_id: resolution.id, ip: payload[:ip]})
+        if data.payload_has_already_been_received?(user, payload)
           status 403
           body "FORBIDDEN: Payload has already been received"
         else
-          Payload.create({user_id: user.id, url_id: url.id, requestedAt: payload[:requestedAt], respondedIn: payload[:respondedIn], referral_id: referral.id, request_id: request.id, parameters: payload[:parameters], event_id: event.id, user_agent_id: user_agent.id, resolution_id: resolution.id, ip: payload[:ip]})
+          data.create_payload(user, payload)
         end
       end
     end
