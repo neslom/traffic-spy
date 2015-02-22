@@ -52,6 +52,7 @@ module TrafficSpy
     get '/sources/:identifier/?' do
       user = User.find_by(identifier: params[:identifier])
       if !user
+        @message = "#{params[:identifier]} is not yet registered"
         erb :error
       else
         urls = user.payloads.map { |x| x.url.url }
@@ -73,6 +74,7 @@ module TrafficSpy
       !params[:path] ? @full_url : @full_url = @full_url + "/" + params[:path].to_s
       url = Url.find_by(url: @full_url)
       if url.nil? || !user.payloads.find_by(url_id: url.id)
+        @message = "#{@full_url} has not been requested"
         erb :error
       else
         @url = user.payloads.where(url_id: url.id)
@@ -107,7 +109,6 @@ module TrafficSpy
       else
         @event_name = event_ob.eventName
         @event_occurances = event_ob.payloads.count {|us| user.payloads.name == params[:identifier]}
-
         @event_time = event_ob.payloads.where(user_id: user.id ).all.group_by do |hour|
           Time.parse(hour.requestedAt).strftime("%I%p")
         end
