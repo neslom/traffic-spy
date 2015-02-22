@@ -2,4 +2,5 @@
 <ul>
   <li>Longest response time: <%= @url.maximum(:respondedIn) %></li>
   <li>Shortest response time: <%= @url.minimum(:respondedIn) %></li>
+  <li>Average response time: <%= @url.average(:respondedIn).to_i %></li>
 </ul>
