@@ -117,15 +117,15 @@ module TrafficSpy
     get '/sources/:identifier/events/:eventname' do
       user = User.find_by(identifier: params[:identifier])
       event_ob = Event.find_by(eventName: params[:eventname])
-      if event_ob.nil?
+      if event_ob.nil? || user.payloads.find_by(event_id: event_ob.id).nil?
         @message = "#{params[:eventname]} is not defined <br>
         <a href='/sources/#{params[:identifier]}/events'>
         Return To Events Index</a>"
         erb :error
       else
         @event_name = event_ob.eventName
-        @event_occurances = event_ob.payloads.count do |us|
-          user.payloads.name == params[:identifier]
+        @event_occurances = user.payloads.where(event_id: event_ob.id).count do |us|
+          user.payloads.id == params[:identifier]
         end
         event_payloads = event_ob.payloads.where(user_id: user.id)
         @event_time = event_payloads.all.group_by do |hour|
