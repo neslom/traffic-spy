@@ -4,7 +4,6 @@ require 'time'
 
 module TrafficSpy
   class Server < Sinatra::Base
-
     get '/' do
       erb :dashboard
     end
@@ -59,11 +58,17 @@ module TrafficSpy
         urls = user.payloads.map { |x| x.url.url }
         @sorted_urls = urls.sort_by { |e| urls.count(e) }.reverse.uniq
         user_agents = user.payloads.map { |x| x.user_agent.userAgent }
-        sorted_user_agents = user_agents.sort_by { |e| user_agents.count(e) }.reverse.uniq
-        @sorted_user_agents = sorted_user_agents.map { |x| UserAgentParser.parse(x) }
+        sorted_user_agents = user_agents.sort_by do |e|
+          user_agents.count(e)
+        end.reverse.uniq
+
+        @sorted_user_agents = sorted_user_agents.map do |x|
+          UserAgentParser.parse(x)
+        end
         @resolutions = user.payloads.map { |x| x.resolution }.uniq
         @url_response_times = Url.all.map do |name|
-        [name.url, user.payloads.where(url_id: name.id).average(:respondedIn).to_i]
+          [name.url,
+           user.payloads.where(url_id: name.id).average(:respondedIn).to_i]
         end
         erb :index
       end
@@ -72,7 +77,12 @@ module TrafficSpy
     get '/sources/:identifier/urls/:relative/?:path?' do
       user = User.find_by(identifier: params[:identifier])
       @full_url = user.rootUrl + "/" + params[:relative]
-      !params[:path] ? @full_url : @full_url = @full_url + "/" + params[:path].to_s
+      if !params[:path]
+        @full_url
+      else
+        @full_url = @full_url + "/" + params[:path].to_s
+      end
+
       url = Url.find_by(url: @full_url)
       if url.nil? || !user.payloads.find_by(url_id: url.id)
         @message = "#{@full_url} has not been requested"
@@ -81,9 +91,13 @@ module TrafficSpy
         @url = user.payloads.where(url_id: url.id)
         @http_verbs = @url.all.map { |x| x.request.requestType }.uniq
         referrers = @url.all.map { |x| x.referral.referredBy }
-        @sorted_referrers = referrers.sort_by { |e| referrers.count(e) }.reverse.uniq
+        @sorted_referrers = referrers.sort_by do |e|
+          referrers.count(e)
+        end.reverse.uniq
         user_agents = user.payloads.map { |x| x.user_agent.userAgent }
-        @sorted_user_agents = user_agents.sort_by { |e| user_agents.count(e) }.reverse.uniq
+        @sorted_user_agents = user_agents.sort_by do |e|
+          user_agents.count(e)
+        end.reverse.uniq
         erb :_url_statistics
       end
     end
@@ -104,17 +118,21 @@ module TrafficSpy
       user = User.find_by(identifier: params[:identifier])
       event_ob = Event.find_by(eventName: params[:eventname])
       if event_ob.nil?
-        @message = "#{params[:eventname]} is not an event associated with this user <br>
-        <a href='/sources/#{params[:identifier]}/events'>Return To Events Index</a>"
+        @message = "#{params[:eventname]} is not defined <br>
+        <a href='/sources/#{params[:identifier]}/events'>
+        Return To Events Index</a>"
         erb :error
       else
         @event_name = event_ob.eventName
-        @event_occurances = event_ob.payloads.count {|us| user.payloads.name == params[:identifier]}
-        @event_time = event_ob.payloads.where(user_id: user.id ).all.group_by do |hour|
+        @event_occurances = event_ob.payloads.count do |us|
+          user.payloads.name == params[:identifier]
+        end
+        event_payloads = event_ob.payloads.where(user_id: user.id)
+        @event_time = event_payloads.all.group_by do |hour|
           Time.parse(hour.requestedAt).strftime("%I%p")
         end
-      erb :event_detail
-    end
+        erb :event_detail
+      end
     end
 
   end

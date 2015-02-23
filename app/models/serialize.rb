@@ -36,7 +36,9 @@ module TrafficSpy
     end
 
     def find_or_create_resolution
-      Resolution.find_or_create_by({resolutionWidth: payload[:resolutionWidth], resolutionHeight: payload[:resolutionHeight]})
+      Resolution.find_or_create_by({resolutionWidth: payload[:resolutionWidth],
+                                    resolutionHeight: payload[:resolutionHeight]
+                                   })
     end
 
     def payload_has_already_been_received?(user, payload)

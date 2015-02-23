@@ -1,7 +1,7 @@
 require './test/test_helper'
 
 module TrafficSpy
-  class ApplicationUrlStatisticsTest < MiniTest::Test
+  class DashboardTest < MiniTest::Test
     include Rack::Test::Methods
     include Capybara::DSL
 
