@@ -29,7 +29,7 @@ module TrafficSpy
 
     def test_client_can_navigate_to_url_specific_page
       visit '/sources/google/urls/blog'
-      within("h3") do
+      within("h1") do
         assert page.has_content?("http://google.com/blog Statistics")
       end
     end
@@ -66,7 +66,7 @@ module TrafficSpy
     def test_shows_data_for_url_with_additional_path
       visit '/sources/google/urls/blog/2'
 
-      within("h3") do
+      within("h1") do
         assert page.has_content?("http://google.com/blog/2 Statistics")
       end
 
