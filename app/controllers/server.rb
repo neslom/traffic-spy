@@ -4,7 +4,6 @@ require 'time'
 
 module TrafficSpy
   class Server < Sinatra::Base
-
     get '/' do
       erb :dashboard
     end
@@ -59,11 +58,16 @@ module TrafficSpy
         urls = user.payloads.map { |x| x.url.url }
         @sorted_urls = urls.sort_by { |e| urls.count(e) }.reverse.uniq
         user_agents = user.payloads.map { |x| x.user_agent.userAgent }
-        sorted_user_agents = user_agents.sort_by { |e| user_agents.count(e) }.reverse.uniq
-        @sorted_user_agents = sorted_user_agents.map { |x| UserAgentParser.parse(x) }
+        sorted_user_agents = user_agents.sort_by do |e|
+          user_agents.count(e)
+        end.reverse.uniq
+
+        @sorted_user_agents = sorted_user_agents.map do |x|
+          UserAgentParser.parse(x)
+        end
         @resolutions = user.payloads.map { |x| x.resolution }.uniq
         @url_response_times = Url.all.map do |name|
-        [name.url, user.payloads.where(url_id: name.id).average(:respondedIn).to_i]
+          [name.url, user.payloads.where(url_id: name.id).average(:respondedIn).to_i]
         end
         erb :index
       end
@@ -113,8 +117,8 @@ module TrafficSpy
         @event_time = event_ob.payloads.where(user_id: user.id ).all.group_by do |hour|
           Time.parse(hour.requestedAt).strftime("%I%p")
         end
-      erb :event_detail
-    end
+        erb :event_detail
+      end
     end
 
   end
