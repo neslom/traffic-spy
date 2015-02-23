@@ -19,7 +19,7 @@ h1 {
     background-color: #cccccc;
 }
 #event_button {
-    margin: 10px;
+    margin-top: 20px;
     position: relative;
     left: 50px;
     background-color: #cc0000;
@@ -70,4 +70,10 @@ td, th {
 }
 td {
     text-align: center;
+}
+a{
+  text-shadow: none;
+}
+li{
+  margin: 5px;
 }
