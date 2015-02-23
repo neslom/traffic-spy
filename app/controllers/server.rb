@@ -66,10 +66,10 @@ module TrafficSpy
           UserAgentParser.parse(x)
         end
         @resolutions = user.payloads.map { |x| x.resolution }.uniq
-        @url_response_times = Url.all.map do |name|
-          [name.url,
-           user.payloads.where(url_id: name.id).average(:respondedIn).to_i]
-        end
+        @url_response_times = user.payloads.all.map do |x|
+          [Url.find(x.url_id).url,
+           user.payloads.where(url_id: x.url_id).average(:respondedIn).to_i]
+        end.uniq
         erb :index
       end
     end
